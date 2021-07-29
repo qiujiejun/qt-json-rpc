@@ -40,7 +40,7 @@ JsonRPC::Error::Error(ErrorCode code, QString desc) :
 
 JsonRPC::Error::operator QByteArray() const
 {
-    return QtJson::serialize(static_cast<QVariantMap>(*this));
+    return QtJson::Json::serialize(static_cast<QVariantMap>(*this));
 }
 
 JsonRPC::Error::operator QVariantMap() const

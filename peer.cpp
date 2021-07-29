@@ -86,7 +86,7 @@ void Peer::setPeerIP(QString &peerIP)
 void Peer::handleMessage(const QByteArray &json)
 {
     bool ok;
-    QVariant object = QtJson::parse(QString::fromUtf8(json), ok);
+    QVariant object = QtJson::Json::parse(QString::fromUtf8(json), ok);
 
     if (!ok) {
         emit readyResponseMessage(static_cast<QByteArray>(Error(PARSE_ERROR)));
@@ -151,7 +151,7 @@ void Peer::handleRequest(const QVariant &json)
 
 void Peer::reply(const QVariant &json)
 {
-    emit readyResponseMessage(QtJson::serialize(json));
+    emit readyResponseMessage(QtJson::Json::serialize(json));
 }
 
 bool Peer::call(const QString &method, const QVariant &params, const QVariant &id)
@@ -179,7 +179,7 @@ bool Peer::call(const QString &method, const QVariant &params, const QVariant &i
 
     object.insert("id", id);
 
-    emit readyRequestMessage(QtJson::serialize(object));
+    emit readyRequestMessage(QtJson::Json::serialize(object));
     return true;
 }
 

@@ -56,7 +56,7 @@ void HttpHelper::replyFinished(QNetworkReply *reply)
 
     if (reply->error() != QNetworkReply::NoError) {
         bool ok;
-        QtJson::parse(QString::fromUtf8(content), ok);
+        QtJson::Json::parse(QString::fromUtf8(content), ok);
 
         if (!ok) {
             emit error(reply->error());
