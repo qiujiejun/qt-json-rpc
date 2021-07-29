@@ -37,6 +37,11 @@ public:
       */
     bool setSocket(QTcpSocket *socket);
 
+    quint32 nextMessageId();
+    void setMessageId(quint32 newMessageId);
+
+    QTcpSocket *getSocket() const;
+
 signals:
     /*!
       Emitted when the result for your call is available.
@@ -82,6 +87,11 @@ private:
     QTcpSocket *socket;
     QByteArray buffer;
     quint16 nextMessageSize;
+    /**
+     * @brief messageId the message id that is used by current transmission
+     */
+    quint32 messageId;
+
 };
 
 } // namespace JsonRPC

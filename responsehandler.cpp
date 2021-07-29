@@ -137,3 +137,11 @@ void ResponseHandler::error(const JsonRPC::Error &error)
     // per request
     peer = NULL;
 }
+
+QString ResponseHandler::getPeerIP()
+{
+    if (peer) {
+        return peer->getPeerIP();
+    }
+    return QString("");
+}

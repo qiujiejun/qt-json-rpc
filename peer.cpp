@@ -67,9 +67,20 @@ inline bool isResponseMessage(const QVariant &object)
     }
 }
 
-Peer::Peer(QObject *parent) :
-    QObject(parent)
+Peer::Peer(QObject *parent)
+    : QObject(parent)
+    , peerIP("")
 {
+}
+
+QString Peer::getPeerIP()
+{
+    return peerIP;
+}
+
+void Peer::setPeerIP(QString &peerIP)
+{
+    this->peerIP = peerIP;
 }
 
 void Peer::handleMessage(const QByteArray &json)

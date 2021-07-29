@@ -105,6 +105,8 @@ public:
       */
     void error(const Error &error);
 
+    QString getPeerIP();
+
 private:
     QPointer<Peer> peer;
 

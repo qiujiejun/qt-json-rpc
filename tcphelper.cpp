@@ -3,6 +3,7 @@
 #include "tcphelper.h"
 #include <QTcpSocket>
 #include <QDataStream>
+#include <QHostAddress>
 
 using namespace JsonRPC;
 
@@ -16,8 +17,8 @@ TcpHelper::TcpHelper(QObject *parent) :
 
 bool TcpHelper::setSocket(QTcpSocket *socket)
 {
-    if (this->socket)
-        onDisconnected();
+//    if (this->socket)
+//        onDisconnected();
 
     if (socket && socket->state() == QAbstractSocket::ConnectedState) {
         socket->setParent(this);
@@ -25,8 +26,9 @@ bool TcpHelper::setSocket(QTcpSocket *socket)
         connect(socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
         connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
 
-
+        QString peerIP = socket->peerAddress().toString().split("::ffff:")[1];
         peer = new Peer(this);
+        peer->setPeerIP(peerIP);
 
         connect(peer, SIGNAL(readyRequestMessage(QByteArray)),
                 this, SLOT(onReadyMessage(QByteArray)));
@@ -72,7 +74,7 @@ void TcpHelper::onReadyRead()
 {
     buffer.append(socket->readAll());
 
-    if (nextMessageSize)
+    if (buffer.size() > 10)
         goto STATE_WAITING_FOR_CONTENT;
 
     STATE_UNKNOW_SIZE:
@@ -87,11 +89,11 @@ void TcpHelper::onReadyRead()
     }
 
     STATE_WAITING_FOR_CONTENT:
-    if (buffer.size() >= nextMessageSize) {
-        peer->handleMessage(buffer.left(nextMessageSize));
-        buffer.remove(0, nextMessageSize);
+    if (buffer.size() >= 30) {
+        peer->handleMessage(buffer.left(buffer.size()));
+        buffer.remove(0, buffer.size());
 
-        nextMessageSize = 0;
+//        nextMessageSize = 0;
         goto STATE_UNKNOW_SIZE;
     }
 }
@@ -112,4 +114,19 @@ void TcpHelper::onDisconnected()
     socket = NULL;
 
     emit disconnected();
+}
+
+QTcpSocket *TcpHelper::getSocket() const
+{
+    return socket;
+}
+
+quint32 TcpHelper::nextMessageId()
+{
+    return ++messageId;
+}
+
+void TcpHelper::setMessageId(quint32 newMessageId)
+{
+    messageId = newMessageId;
 }

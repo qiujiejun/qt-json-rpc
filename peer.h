@@ -23,6 +23,16 @@ public:
       */
     Peer(QObject *parent = NULL);
 
+    /*!
+      get the IP of the peer side
+     */
+    QString getPeerIP();
+
+    /*!
+      set the IP of the peer side
+     */
+    void setPeerIP(QString &peerIP);
+
 signals:
     /*!
       Emitted when a new request message is available.
@@ -91,6 +101,10 @@ public slots:
       according JSON-RPC 2.0 spec.
       */
     bool call(const QString &method, const QVariant &params, const QVariant &id);
+
+private:
+    QString peerIP;
+
 };
 
 } // namespace JsonRPC
